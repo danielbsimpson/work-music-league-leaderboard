@@ -61,7 +61,7 @@ def render(data: LeagueData) -> None:
         for e, bg in zip(misunderstood, _MISUND_COLORS)
     ]
     avg_tiles = [
-        stat_tile("📈", e["name"], f"{e['avg_points']} avg pts", bg)
+        stat_tile("📈", e["name"], f"{e['avg_points']} avg  ·  {e['rounds_played']} rounds", bg)
         for e, bg in zip(avg_entries, _AVG_COLORS)
     ]
 
@@ -149,7 +149,12 @@ def render(data: LeagueData) -> None:
         key="lb_round_avg",
     )
     st.dataframe(
-        avg_df.rename(columns={"rank": "Rank", "name": "Player", "avg_points": "Avg Pts / Round"}),
+        avg_df.rename(columns={
+            "rank":          "Rank",
+            "name":          "Player",
+            "avg_points":    "Avg Pts / Round",
+            "rounds_played": "Rounds Played",
+        })[["Rank", "Player", "Avg Pts / Round", "Rounds Played"]],
         hide_index=True,
         width="stretch",
     )

@@ -15,7 +15,6 @@ import streamlit as st
 from music_league_stats import (
     LeagueData,
     load_data_from_dirs,
-    generate_report_text,
 )
 from ui.components import inject_css
 from ui import (
@@ -147,24 +146,6 @@ scope_label = (
     " + ".join(os.path.basename(d) for d in chosen_dirs)
     if len(chosen_dirs) > 1
     else os.path.basename(chosen_dirs[0])
-)
-
-# ---------------------------------------------------------------------------
-# Report download
-# ---------------------------------------------------------------------------
-st.sidebar.subheader("Export Report")
-
-@st.cache_data(show_spinner="Generating report...")
-def _cached_report(dirs: tuple[str, ...]) -> str:
-    d = get_data(dirs)
-    return generate_report_text(d)
-
-report_text = _cached_report(tuple(chosen_dirs))
-st.sidebar.download_button(
-    label="Download .txt report",
-    data=report_text.encode("utf-8"),
-    file_name=f"music_league_stats_{scope_label.replace(' ', '_').replace('+', 'and')}.txt",
-    mime="text/plain",
 )
 
 st.sidebar.markdown("---")
