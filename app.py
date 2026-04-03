@@ -94,6 +94,7 @@ if not region_map:
     st.stop()
 
 region_names = list(region_map.keys())
+region_display_names = [r.replace("_", " ") for r in region_names]
 
 # ---------------------------------------------------------------------------
 # Sidebar
@@ -103,7 +104,14 @@ st.sidebar.markdown("---")
 
 # -- Region picker --
 st.sidebar.subheader("Region")
-selected_region = st.sidebar.radio("Select region", region_names, index=0)
+default_region_index = next(
+    (i for i, n in enumerate(region_names) if "US" in n.upper()),
+    0,
+)
+selected_display = st.sidebar.radio(
+    "Select region", region_display_names, index=default_region_index
+)
+selected_region = region_names[region_display_names.index(selected_display)]
 
 region_leagues      = region_map[selected_region]          # full paths
 region_league_names = [os.path.basename(d) for d in region_leagues]
@@ -156,7 +164,7 @@ st.sidebar.info("Tip: switch tabs above to explore each stat category.")
 # ---------------------------------------------------------------------------
 st.title("🎵 Daniel's Work Music Leagues")
 st.caption(
-    f"**{selected_region}** — {len(chosen_dirs)} league(s)  ·  "
+    f"**{selected_display}** — {len(chosen_dirs)} league(s)  ·  "
     f"{len(data.rounds)} rounds  ·  "
     f"{data.competitors['ID'].nunique()} competitors  ·  "
     f"{len(data.submissions)} submissions  ·  "
